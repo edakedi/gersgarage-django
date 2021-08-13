@@ -22,8 +22,8 @@ class Appointment(models.Model):
 
 
     service_type = ManyToManyField('Service', blank=True, related_name='service_type')
-    customer = OneToOneField(Customer, on_delete=CASCADE)
-    mechanic = OneToOneField(Mechanic, on_delete=CASCADE)
+    customer = ManyToManyField(Customer, blank=True, related_name='appointment_customer')
+    mechanic = ManyToManyField(Mechanic, blank=True, related_name='appointment_mechanic')
     status = models.CharField(
         max_length=2,
         choices=Status.choices,

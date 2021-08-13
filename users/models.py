@@ -13,6 +13,8 @@ class Car(models.Model):
     category = models.CharField(max_length=50, blank=True)
     engine_type = models.CharField(max_length=50, blank=True)
     make = models.CharField(max_length=50, blank=True)
+    model = models.CharField(max_length=50, blank=True)
+    year = models.CharField(max_length=4, blank=True, default='1921')
     licence_detail = models.CharField(max_length=100, blank=True)
 
 class Customer(models.Model):

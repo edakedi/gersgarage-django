@@ -3,12 +3,19 @@ from django.contrib import  auth
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import ListView
-import json
+from django.contrib.auth import get_user_model
 
 from .models import Customer
-from appointments.models import Appointment
+from appointments.models import Appointment, Service
 
 from .forms import UserRegisterForm
+
+import json
+
+
+
+User = get_user_model()
+
 
 def login(request):
     if request.method == 'POST':
@@ -47,14 +54,21 @@ class AppointmentListView(LoginRequiredMixin, ListView):
     paginate_by = 12
     def get_context_data(self, **kwargs):
         context = super(AppointmentListView, self).get_context_data(**kwargs)
-        user = get_object_or_404(Customer, username=self.kwargs.get('slug'))
+        user = get_object_or_404(User, username=self.kwargs.get('slug'))
         p = Customer.objects.filter(user=user).first()
-        app = Appointment.objects.filter(customer=p).order_by('-created_at')
+        app_list = Appointment.objects.filter(customer=p).order_by('-created_at')
         
+        for a in app_list:
+            service_list = []
+            for s in a.service_type.all():
+                service_list.append(s)
+            a.service_list = service_list
+            a.mechanic_name = a.mechanic.first()
+
         context['u'] = user
-        context['appointments'] = app
+        context['appointments'] = app_list
         return context
     
     def get_queryset(self):
-        user = get_object_or_404(Customer, username=self.kwargs.get('slug'))
+        user = get_object_or_404(Customer, slug=self.kwargs.get('slug'))
         return Appointment.objects.filter(customer=user).order_by('-created_at')

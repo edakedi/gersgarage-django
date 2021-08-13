@@ -9,18 +9,28 @@
 
 <header>
   <div class="container"> <br><br>
-    <div class="profile">
-      <div class="profile-image">
-        <img width='50%' src="{{ u.profile.main_photo.url }}" alt="">
-      </div>
-      <div>
-        <h1 class="profile-user-name">{{ u.username }}</h1>
-      </div>
+    <div class="col-12">
+        <div class="profile">
+            <div>
+              <h1 class="title profile-user-name"><b>{{ u.customer.slug }}</b></h1>
+            </div>
+      
+            <div class="profile-bio">
 
-      <div class="profile-bio">
-        <p><span class="profile-real-name">{{ u.profile.full_name }} </span> ◌ {{ u.profile.bio }}
-      </div>
+              <h3><b>Registered Car: </b><span class="profile-real-name">{{ u.customer.car.make }} </span> 
+                ◌ {{ u.customer.car.model }} 
+                ◌ {{ u.customer.car.year }}
+                - {{ u.customer.car.category }}
+                <button style="margin-left: 20px;" class="btn btn-primary btn-round btn-sm">Edit</button>
+
+            </div>
+          </div>
     </div>
+    <br> <br>
+    <div  class="col-12"> 
+        <button style="display:block; margin:0 auto" class="btn btn-success">Schedule new appointment</button>
+    </div>
+
 
   </div>
   </div>
@@ -35,7 +45,9 @@
         <div class="nav-tabs-wrapper">
           <ul id="tabs" class="nav nav-tabs" role="tablist">
             <li class="nav-item ">
-              <a class="nav-link active" href="#appointments" data-toggle="tab" role="tab">Appointments</a>
+                <h3>
+                    <a class="nav-link active" href="#appointments" data-toggle="tab" role="tab">Appointments</a>
+                </h3>
             </li>
           </ul>
         </div>
@@ -44,45 +56,41 @@
         <div class="tab-pane active" id="appointments" role="tabpanel">
           <div class="gallery">
 
-            {% if posts %}
-            {% for post in posts %}
-
-            <div class="gallery-item" tabindex="0">
-
-              <a href="{% url 'post-detail' post.id %}" style="border: none; background-color:white; outline:none">
-                <img src=" {{ post.pic.url }} " class="gallery-image" alt="">
-
-                <div class="gallery-item-info">
+            <table style='font-size:120%'class="table">
+                <thead>
+                    <tr>
+                        <th>Service Type</th>
+                        <th>Status</th>
+                        <th>Mechanic</th>
+                        <th>Comments</th>
+                        <th>Date</th>
+                        <th>Estimated Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+            {% if appointments %}
+            {% for app in appointments %}
+            <tr>
+                <td>
                   <ul>
-                    <li class="gallery-item-likes" style="color: white;">
-                        <i class="fa fa-heart"aria-hidden="true"></i> {{post.likes.count}}
-                    </li>
+                    {% for s in app.service_list %}
+                    
+                      <li><span>{{s.name}}</span></li>
+                    {% endfor %}
                   </ul>
-                </div>
-              </a>
-
-            </div>
+                </td>
+                <td>{{app.get_status_display}}</td>
+                <td>{{ app.mechanic_name}}</td>
+                <td>{{ app.comments}}</td>
+                <td>{{ app.created_at}}</td>
+                <td class="text-center">&euro; {{ app.total_cost}}</td>
+            </tr>
             {% endfor %}
-            {% else %}
-            <div class="col col-12">
-                    <button type="button" class="btn btn-success">
-                        Schedule
-                    </button>
-            </div>
             {% endif %}
+        </tbody>
+    </table>
           </div>
-          <!--galley ends here-->
-          <!-- Loading row-->
-          <div id="loading" class="row">
-            <div class="col-md-4 text-center ml-auto mr-auto">
-              {% if page_obj.has_next %}
-              <div class="text-center">
-                <a href="?page={{page_obj.next_page_number }}" class="btn btn-outline-info btn-round">Daha fazla ...</a>
-              </div>
-
-              {% endif %}
-            </div>
-          </div>
+          
         </div>
 
       </div>
