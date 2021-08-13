@@ -1,0 +1,66 @@
+{% extends 'base_register.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="wrapper">
+    <div class="page-header register-background" style="background-color: #FF8F5E;">
+      <div class="filter"></div>
+      <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-12 ml-auto ">
+                <div class="card card-register " style="margin: 0 auto">
+                  <h3 class="card-title text-center">Sign Up</h3>
+
+                  <div class="division">
+                    <div class="line l"></div>
+                    <span>-</span>
+                    <div class="line r"></div>
+                  </div>
+                  <form action="{% url 'register' %}" class="register-form" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <input name="email" value="{{ user.email }}" type="text" class="form-control" placeholder="Email">
+                    <input name="username" value="{{ user.username }}"  type="text" class="form-control" placeholder="Username" onkeyup="return forceLower(this);">
+                    <input name = "password1" value="{{ user.password1 }}"  type="password" class="form-control" placeholder="Password">
+                    <input name = "password2" value="{{ user.password2 }}"  type="password" class="form-control" placeholder="Password Verification">
+                    <input type="submit" value="Kaydol" class="btn btn-block btn-round">
+                  </form>
+                  <div class="login">
+                    <p>Do you have an account? <a href="{% url 'login' %}">Login</a>.</p>
+                  </div>
+                </div>
+              </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-12 mr-auto">
+            <div class="info info-horizontal">
+              <div class="icon">
+                <i class="fa fa-umbrella"></i>
+              </div>
+              <div class="description">
+                <h3> We've got you covered </h3>
+              </div>
+            </div>
+            <div class="info info-horizontal">
+              <div class="icon">
+                <i class="fa fa-map-signs"></i>
+              </div>
+              <div class="description">
+                <h3> Clear Directions </h3>
+              </div>
+            </div>
+            <div class="info info-horizontal">
+              <div class="icon">
+                <i class="fa fa-user-secret"></i>
+              </div>
+              <div class="description">
+                <h3> We value your car </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+   
+    </div>
+  </div>
+
+{% endblock %}
