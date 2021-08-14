@@ -5,13 +5,12 @@ from django.http import HttpResponse, JsonResponse
 from django.views.generic import ListView
 from django.contrib.auth import get_user_model
 
-from .models import Customer
+from .models import Customer, Mechanic
 from appointments.models import Appointment, Service
 
-from .forms import UserRegisterForm
+from .forms import NewAppointmentForm, UserRegisterForm
 
 import json
-
 
 
 User = get_user_model()
@@ -47,6 +46,21 @@ def register(request):
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})
 
+def newAppointment(request, slug):
+    form = NewAppointmentForm(request.POST, request.FILES)
+    if form.is_valid():
+        app = form.save(commit=False)
+        app.customer = Customer.objects.get(User=request.user)
+        app.mechanic = Mechanic.objects.order_by('?').first()
+        for s in app.service_type:
+            app.total_cost = s.cost
+    else:
+        print(':(')
+        form = NewAppointmentForm()
+    print(form.errors)
+    return render(request, 'users/home.html', {'form': form})
+
+
 class AppointmentListView(LoginRequiredMixin, ListView):
     model = Customer
     template_name = 'users/home.html'
@@ -57,7 +71,7 @@ class AppointmentListView(LoginRequiredMixin, ListView):
         user = get_object_or_404(User, username=self.kwargs.get('slug'))
         p = Customer.objects.filter(user=user).first()
         app_list = Appointment.objects.filter(customer=p).order_by('-created_at')
-        
+      
         for a in app_list:
             service_list = []
             for s in a.service_type.all():
@@ -65,8 +79,10 @@ class AppointmentListView(LoginRequiredMixin, ListView):
             a.service_list = service_list
             a.mechanic_name = a.mechanic.first()
 
+        all_available_services = Service.objects.filter().all()
         context['u'] = user
         context['appointments'] = app_list
+        context['allservices'] = all_available_services
         return context
     
     def get_queryset(self):

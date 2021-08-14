@@ -30,5 +30,6 @@ class Appointment(models.Model):
         default=Status.BOOKED)
     comments = models.CharField(max_length=150, blank=True)
     created_at = models.DateField(default=datetime.now)
+    scheduled_at = models.CharField(max_length=15, blank=True)
     total_cost = models.FloatField()
     

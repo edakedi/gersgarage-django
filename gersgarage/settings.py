@@ -82,7 +82,7 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'garagedb',
-        'USER': 'taylanakbas',
+        'USER': 'edakadi',
         'PASSWORD': '1234',
         'HOST': 'localhost',
 
